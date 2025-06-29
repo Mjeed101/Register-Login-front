@@ -8,13 +8,26 @@
 </head>
 <body class="home-body">
 
-    <div class="home-container">
-        <h1>Welcome to Home Page</h1>
-        <div class="home-buttons">
-            <a href="account.html" class="home-link">Account</a>
-            <a href="index.html" class="home-link" onclick="logout()">Logout</a>
-        </div>
+    <div class="welcome-card">
+        <h2>Welcome to Home Page</h2>
+        <button onclick="window.location.href='account.html'">Account</button>
+        <button onclick="logout()">Logout</button>
     </div>
+
+   
+
+    <div id="messageBox" class="form-message"></div>
+     <div class="tweet-section">
+        <h3>Write a Tweet</h3>
+        <form id="tweetForm">
+        <textarea id="tweetInput" rows="4" placeholder="Enter your tweet"></textarea>
+        <button id="tweetButton" type="submit">Post Tweet</button>
+        </form>
+    </div>
+
+    <div id="timeline"></div>
+
+</div>
 
     <script>
         if (!localStorage.getItem('userId')) {
@@ -26,5 +39,6 @@
             window.location.href = 'index.html';
         }
     </script>
+    <script src="home.js"></script>
 </body>
 </html>
