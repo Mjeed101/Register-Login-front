@@ -29,11 +29,23 @@ function handleLogin(e) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     })
-    .then(response => response.json())
-    .then(data => {
+
+    .then(async response => {
+        const data = await response.json();
+
+        if (!response.ok) {
+            showMessage(data.message || 'Invalid credentials.', 'error');
+            throw new Error('Login failed');
+        }
+
+        localStorage.setItem('userId',data.user.id);
+        
         showMessage(data.message, 'success');
-        // Redirect example:
-        // if (data.success) window.location.href = 'home.html';
+
+        // Redirect after 1 second
+        setTimeout(() => {
+            window.location.href = 'home.html';
+        }, 1000);
     })
     .catch(error => {
         console.error('Error', error);

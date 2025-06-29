@@ -102,3 +102,146 @@ p a:hover {
         padding: 30px 20px;
     }
 }
+
+
+/* Home Page  */
+
+
+.home-body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.home-container {
+    text-align: center;
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.home-container h1 {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.home-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.home-link {
+    text-decoration: none;
+    padding: 12px 20px;
+    background-color: #667eea;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.home-link:hover {
+    background-color: #5a67d8;
+}
+
+/* Account Page*/
+.account-body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.account-container {
+
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: right;
+    width: 400px;
+}
+
+.account-container h1 {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    text-align: right;
+}
+
+.label {
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+
+}
+
+.value {
+    color: #555;
+}
+
+.account-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.account-link {
+    text-decoration: none;
+    padding: 12px 20px;
+    background-color: #667eea;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.account-link:hover {
+    background-color: #5a67d8;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+#updateSection {
+    transition: all 0.3s ease-in-out;
+}
+
