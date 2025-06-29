@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Information</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="account-body">
+
+    <div class="account-container">
+        <h1>Account Information</h1>
+
+        <div class="account-info">
+            <div class="info-row"><span class="label"> Username :</span> <span class="value" id="username"></span></div>
+            <div class="info-row"><span class="label">Name :</span> <span class="value" id="name"></span></div>
+            <div class="info-row"><span class="label">Email:</span> <span class="value" id="email"></span></div>
+            <div class="info-row"><span class="label">Password :</span> <span class="value">********</span></div>
+        </div>
+
+        <div class="account-buttons">
+            <a href="home.html" class="account-link">Back To Home Page</a>
+            <a href="index.html" class="account-link" onclick="logout()">Logout</a>
+        </div>
+
+        <button id="editButton" class="account-link">Update infomation</button>
+
+
+<div id="updateSection" style="display: none; margin-top: 20px;">
+    
+    <form id="updateForm">
+        <div class="form-group">
+            <label>Username:</label>
+            <input type="text" id="editUsername" required>
+        </div>
+
+        <div class="form-group">
+            <label>Name: </label>
+            <input type="text" id="editName" required>
+        </div>
+
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="editEmail" required>
+        </div>
+
+        <div class="form-group">
+            <label>Password: (keep it empty if you dont want to change it ) </label>
+            <input type="password" id="editPassword" placeholder="New Password">
+        </div>
+
+        <button type="submit" class="account-link">Update</button>
+    </form>
+
+    <p id="updateMessage" style="margin-top: 15px; color: green;"></p>
+</div>
+
+    
+    <script>
+       const userId = localStorage.getItem('userId');
+
+if (!userId) {
+    window.location.href = 'index.html';
+}
+
+// Load user info
+fetch(`http://127.0.0.1:8000/api/user/${userId}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('User not found');
+        }
+        return response.json();
+    })
+    .then(data => {
+        document.getElementById('username').textContent = data.username;
+        document.getElementById('name').textContent = data.name;
+        document.getElementById('email').textContent = data.email;
+
+        document.getElementById('editUsername').value = data.username;
+        document.getElementById('editName').value = data.name;
+        document.getElementById('editEmail').value = data.email;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        window.location.href = 'index.html';
+    });
+
+document.getElementById('updateForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const username = document.getElementById('editUsername').value.trim();
+    const name = document.getElementById('editName').value.trim();
+    const email = document.getElementById('editEmail').value.trim();
+    const password = document.getElementById('editPassword').value.trim();
+
+    const updateData = { username, name, email };
+
+    if (password) { // Only add password if provided
+        updateData.password = password;
+    }
+
+    fetch(`http://127.0.0.1:8000/api/user/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData)
+    })
+    .then(async response => {
+        const data = await response.json();
+
+        if (!response.ok) {
+            if (data.errors && data.errors.email) {
+                throw new Error(data.errors.email[0]);
+            }
+            if (data.errors && data.errors.password) {
+                throw new Error(data.errors.password[0]);
+            }
+            throw new Error(data.message || 'Update failed.');
+        }
+
+        // Update displayed info
+        document.getElementById('username').textContent = username;
+        document.getElementById('name').textContent = name;
+        document.getElementById('email').textContent = email;
+
+        document.getElementById('updateMessage').textContent = data.message;
+        document.getElementById('updateMessage').style.color = 'green';
+    })
+    .catch(error => {
+        document.getElementById('updateMessage').textContent = error.message;
+        document.getElementById('updateMessage').style.color = 'red';
+    });
+});
+
+document.getElementById('editButton').addEventListener('click', function () {
+    const updateSection = document.getElementById('updateSection');
+
+    if (updateSection.style.display === 'none') {
+        updateSection.style.display = 'block';
+    } else {
+        updateSection.style.display = 'none';
+    }
+});
+
+
+function logout() {
+    localStorage.clear();
+    window.location.href = 'index.html';
+}
+
+
+    </script>
+
+</body>
+</html>
