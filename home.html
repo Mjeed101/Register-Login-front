@@ -1,43 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Home Page</title>
     <link rel="stylesheet" href="style.css">
-</head>
-<body class="home-body">
-
-    <div class="welcome-card">
-        <h2>Welcome to Home Page</h2>
+  </head>
+  <body class="home-body">
+    <div class="main-container">
+    <header class="welcome-card">
+      <h2>Welcome to Home Page</h2>
+      <div class="welcome-actions">
         <button onclick="window.location.href='account.html'">Account</button>
-        <button onclick="logout()">Logout</button>
-    </div>
+        <button id="logoutButton">Logout</button>
+      </div>
+    </header>
 
-   
+    <main class="content">
+      <div id="messageBox"></div>
 
-    <div id="messageBox" class="form-message"></div>
-     <div class="tweet-section">
+      <section class="tweet-section">
         <h3>Write a Tweet</h3>
         <form id="tweetForm">
-        <textarea id="tweetInput" rows="4" placeholder="Enter your tweet"></textarea>
-        <button id="tweetButton" type="submit">Post Tweet</button>
+          <textarea
+            id="tweetInput"
+            rows="4"
+            placeholder="Enter your tweet"
+          ></textarea>
+          <button type="submit">Post Tweet</button>
         </form>
+      </section>
+
+      <h2>My Tweet Timeline</h2>
+      <section id="timeline"></section>
+    </main>
     </div>
-
-    <div id="timeline"></div>
-
-
-    <script>
-        if (!localStorage.getItem('userId')) {
-            window.location.href = 'index.html';
-        }
-
-        function logout() {
-            localStorage.clear();
-            window.location.href = 'index.html';
-        }
-    </script>
-    <script src="home.js"></script>
-</body>
+  </body>
+  <script src="home.js"></script>
 </html>
