@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home Page</title>
+  <style>
+    /* Reset & basic */
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body.home-body {
+      font-family: sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header.welcome-card {
+      background: #fff;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    header .welcome-card h2 { font-size: 1.25rem }
+    .welcome-actions button {
+      margin-left: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #1da1f2;
+      color: #fff;
+    }
+    .welcome-actions button:hover { background: #0d95e8 }
+
+    main.content {
+      flex: 1;
+      max-width: 600px;
+      width: 100%;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    #messageBox {
+      min-height: 1.5em;
+      margin-bottom: 1rem;
+      color: green;
+    }
+
+    .tweet-section {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+    .tweet-section h3 { margin-bottom: 0.5rem }
+    .tweet-section form {
+      display: flex;
+      flex-direction: column;
+    }
+    .tweet-section textarea {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+      margin-bottom: 0.5rem;
+      font-family: inherit;
+    }
+    .tweet-section button {
+      align-self: flex-end;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #1da1f2;
+      color: #fff;
+    }
+    .tweet-section button:hover { background: #0d95e8 }
+
+     /* Container */
+  #timeline {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  /* Tweet card */
+  .tweet {
+    position: relative;
+    background: #ffffff;
+    border-left: 4px solid #1da1f2;       /* accent stripe */
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .tweet:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+
+  /* Author name */
+  .tweet h4 {
+    margin: 0 0 0.5rem;
+    font-size: 1.15rem;
+    color: #1da1f2;
+    font-weight: 600;
+  }
+
+  /* Tweet text */
+  .tweet p {
+    margin: 0 0 0.75rem;
+    line-height: 1.5;
+    color: #333;
+  }
+
+  /* Timestamp */
+  .tweet time {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    text-align: right;
+  }
+
+    @media (max-width: 480px) {
+      header.welcome-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .welcome-actions {
+        margin-top: 1rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+      }
+    }
+  </style>
+</head>
+<body class="home-body">
+
+  <header class="welcome-card">
+    <h2>Welcome to Home Page</h2>
+    <div class="welcome-actions">
+      <button onclick="window.location.href='account.html'">Account</button>
+      <button id="logoutButton">Logout</button>
+    </div>
+  </header>
+
+  <main class="content">
+    <div id="messageBox"></div>
+
+    <section class="tweet-section">
+      <h3>Write a Tweet</h3>
+      <form id="tweetForm">
+        <textarea id="tweetInput" rows="4" placeholder="Enter your tweet"></textarea>
+        <button type="submit">Post Tweet</button>
+      </form>
+    </section>
+
+  <h2>My Tweet Timeline</h2>
+  <section id="timeline"></section>
+  </main>
+
+  <script>
+    async function loadTimeline() {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/timeline', {
+          method: 'get',
+          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Accept': 'application/json' }
+        });
+        const tweets = await res.json();
+
+        const container = document.getElementById('timeline');
+        container.innerHTML = '';  // clear
+
+        tweets.forEach(t => {
+          const div = document.createElement('div');
+          div.className = 'tweet';
+          div.innerHTML = `
+            <h4>${t.name}</h4>
+            <p>${t.content}</p>
+            <time>${t.date}</time>
+          `;
+          container.appendChild(div);
+        });
+
+      } catch (err) {
+        console.error('Failed to load timeline', err);
+        document.getElementById('timeline').textContent = 'Error loading timeline.';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTimeline);
+
+    // redirect if not logged in
+    if (!localStorage.getItem('userId')) {
+      window.location.href = 'index.html';
+    }
+
+    // handle logout via POST, then clear storage + redirect
+    document.getElementById('logoutButton').addEventListener('click', async () => {
+      try {
+        await fetch('/logout', { method: 'POST' });
+      } catch (e) { /* ignore network errors */ }
+      localStorage.clear();
+      window.location.href = 'index.html';
+    });
+
+    // submit tweets to your Laravel route
+    document.getElementById('tweetForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const content = document.getElementById('tweetInput').value.trim();
+      if (!content) return;
+
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/tweets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content, userId: localStorage.getItem('userId') })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          // clear textarea & show message
+          document.getElementById('tweetInput').value = '';
+          document.getElementById('messageBox').textContent = 'Tweet posted!';
+
+        loadTimeline()
+        } else {
+          document.getElementById('messageBox').textContent = 'Failed to post tweet.';
+        }
+      } catch (err) {
+        document.getElementById('messageBox').textContent = 'Error posting tweet.';
+      }
+    });
+  </script>
+
+</body>
+</html>

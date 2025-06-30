@@ -44,7 +44,7 @@ function handleLogin(e) {
 
         // Redirect after 1 second
         setTimeout(() => {
-            window.location.href = 'home.html';
+            window.location.href = 'AzzamTweets.html';
         }, 1000);
     })
     .catch(error => {
